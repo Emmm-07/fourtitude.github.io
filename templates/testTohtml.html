@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Perform Operation Without Refresh</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<form id="operation-form">
+    <input type="number" id="num1" placeholder="Enter number 1">
+    <input type="number" id="num2" placeholder="Enter number 2">
+    <button type="submit">Perform Operation</button>
+</form>
+
+<div id="result-container">
+    <!-- Result will be displayed here -->
+</div>
+
+<script>
+    // Function to handle form submission and send AJAX request
+    $('#operation-form').submit(function(event) {
+        event.preventDefault();  // Prevent form submission
+        var num1 = $('#num1').val();
+        var num2 = $('#num2').val();
+        $.ajax({
+            url: '/perform_operation',  // Flask route to perform the operation
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({num1: num1, num2: num2}),
+            success: function(response) {
+                // Update the DOM with the result
+                $('#result-container').html('Result: ' + response.result);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error performing operation:', error);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

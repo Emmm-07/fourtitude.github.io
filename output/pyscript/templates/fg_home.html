@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Fourtitude Garage</title>
+  		<link rel="stylesheet" href="\static\style.css">
+
+
+	</head>
+	<body>
+
+		<div class="wrapper">
+			<img src = "\static\logo.png" style="width:255px;height:140px;margin:1px 1px 30px 1px;">
+			<h1>CUSTOMER PROFILE</h1>
+			<br>
+			<!--REGISTRATION FORM-->
+			<form action="customer_info" method="post">
+			  <input type="text" name="name" placeholder="FULL NAME" required>
+			  <input type="text" name="address" placeholder="ADDRESS" required>
+			  <input type="text" name="contact" placeholder="CONTACT NO." required>
+				<!--dapat may button dito para magamit yung required at maactivate ang database-->
+				 <button id="submit_button" style="display: none;"></button>
+			</form>
+				<br>
+			<a href="#modal" class="modal-trigger"  >SUBMIT</a>
+		  </div>
+
+		<div class="modal" id="modal">
+  			<div class="modal__dialog">
+    			<section class="modal__content">
+      				<header class="modal__header">
+        				<h3 class="modal__title">NOTICE!</h3>
+        				<a href="#" class="modal__close">&times;</a>
+      				</header>
+      				<div class="modal__body">
+        				<p class="modal__text">Ensure that all information entered are correct before continuing.</p>
+      				</div>
+      				<footer class="modal__footer">
+        				<button id="demo" onclick="submitForm()" >CONFIRM</button>
+      				</footer>
+    			</section>
+  			</div>
+		</div>
+
+		<script>
+     	 function submitForm() {
+				document.getElementById("submit_button").click();
+			}
+
+		</script>
+	</body>
+</html>
+
+

@@ -1,0 +1,59 @@
+
+<html>
+	<head>
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Fourtitude Garage</title>
+  		<link rel="stylesheet" href="\static\style7.css">
+	</head>
+	<body>
+		<div class="wrapper">
+			<img src = "\static\logo3.png" style="height:120px;margin:1px 1px 20px 1px;">
+			<h1>USER LOGIN</h1>
+			<br>
+			<!--REGISTRATION FORM-->
+            <form>
+                <input type="text" id="emp_id" placeholder="EMPLOYEE ID">
+                <input type="password" id="pass" placeholder="PASSWORD">
+             </form>
+            <div>
+                <button id="login">LOGIN</button>
+            </div>
+			<p id="message"></p>
+		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+		<script>
+			//LOGIN
+  			var log = document.getElementById("login");
+			log.addEventListener("click",function(event){
+				var emp_id = $('#emp_id').val();
+				var pass = $('#pass').val();
+				console.log(emp_id);
+				console.log(pass);
+				$.ajax({
+				    type:'POST',
+				    url:'/login',
+				    data:{
+				        emp_id:emp_id,
+				        pass:pass
+				    },
+				    success:function(response){
+				            if(response.isSuccess){
+				                window.location.href = response.redirect_to;
+				            }else{
+								   $('#message').html("<p style=\"font-size: 16px; color: #d14949;\">Invalid Employee ID or Password</p>");
+<!--				                alert("Invalid Employee ID or Password");-->
+
+				            }
+				    },
+				    error:function(xhr, status, error) {
+                        console.error('Error:', error);
+                     }
+
+				})
+
+			})
+		</script>
+	</body>
+</html>	
+
+		

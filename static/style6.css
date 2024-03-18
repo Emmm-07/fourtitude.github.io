@@ -1,0 +1,102 @@
+
+*{
+    margin: auto;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    overflow: visible;
+  }
+
+body{
+    background-image: url('4.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+  }
+
+h1 {
+    color: white;
+    font-size: 90px;
+    text-align: center;
+    flex-grow: 1;
+    width: 80%;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    flex-grow: 1;
+    width: 100%;
+  }
+
+
+/* Date Filter */
+.date-filter {
+  display:flex;
+  justify-content: center;
+  margin-top: 15px;
+  width: 80%;
+}
+
+.date-filter label,
+.date-filter input,
+.date-filter button {
+  margin: 10px;
+}
+
+.f_button {
+  text-decoration: none;
+  font-size: 16px;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+  width: 80px;
+  height: 25px;
+  background: #d14949;
+  color: #fff;
+}
+
+.f_button:hover{
+  background: #802b2b;
+}
+
+
+table {
+    border-collapse: collapse;
+    width: 80%;
+}
+th, td {
+    border: 1px solid #d14949;
+    text-align: center;
+    color: #fff;
+    padding: 15px;
+}
+th {
+    background-color: #d14949;
+}
+
+.back {
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    padding: 10px;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 150px;
+    background: #d14949;
+    color: #fff;
+  }
+
+  .back:hover{
+    background: #802b2b;
+  }

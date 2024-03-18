@@ -1,0 +1,230 @@
+<html>
+	<head>
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Fourtitude Garage</title>
+  		<link rel="stylesheet" href="\static\style8.css">
+	</head>
+    <body>
+    
+    <h1>Employee Information</h1>
+
+    <!-- TRANSAC HITORY TABLE -->
+    <div class="table-container">
+        <table id="transac-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Employee_ID</th>
+                    <th>Employee_Name</th>
+                    <th>Employee_Password</th>
+                    <th>Address</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+             {%for  i in emp_list%}
+                <tr>
+                    <td><input type="radio" class="select-radio" name="radio" id="table"></td>
+                    <td>{{i.e_id}}</td>
+                    <td>{{i.e_name}}</td>
+                    <td>{{i.e_pass}}</td>
+                    <td>{{i.add}}</td>
+                    <td>{{i.contact}}</td>
+                </tr>
+             {% endfor %}
+                <!-- ADD MORE ROWS HERE -->
+            </tbody>
+        </table>
+<!--        <div class="button-container">-->
+<!--            <button class="add-button">Add</button>-->
+<!--            <button class="edit-button">Edit</button>-->
+<!--            <button class="delete-button" onclick="deleteRows()">Delete</button>-->
+<!--        </div>-->
+         </div>
+           <!-- BUTTONS -->
+    <div class="button-container">
+        <a href="#a_modal" class="a_button" onclick="addEmp()">Add</a>
+        <a href="#e_modal" class="e_button" onclick="editPass()">Edit Password</a>
+        <a href="#d_modal" class="d_button" onclick="deleteRows()">Delete</a>
+    </div>
+
+    <!-- ADD FUNCTION -->
+    <div class="a_modal" id="a_modal">
+        <div class="a_modal__dialog">
+            <section class="a_modal__content">
+                <header class="a_modal__header">
+                    <h2 class="a_modal__title">ADD EMPLOYEE</h2>
+                    <a href="#" class="a_modal__close">&times;</a>
+                </header>
+                <div>
+                    <form>
+                        <input type="text" id="emp_id" placeholder="Employee ID">
+                    </form>
+                    <form>
+                        <input type="text" id="emp_name" placeholder="Name">
+                    </form>
+                    <form>
+                        <input type="text"  id="emp_pass" placeholder="Password">
+                    </form>
+                    <form>
+                        <input type="text" id="emp_add" placeholder="Address">
+                    </form>
+                    <form>
+                        <input type="text" id="emp_contact" placeholder="Contact">
+                    </form>
+                </div>
+                <!-- CONFIRM BUTTON -->
+                <a href="#" class="b_confirm" id="add_confirm">CONFIRM</a>
+            </section>
+        </div>
+    </div>
+    <!-- EDIT PASSWORD FUNCTION -->
+    <div class="e_modal" id="e_modal">
+        <div class="e_modal__dialog">
+            <section class="e_modal__content">
+                <header class="e_modal__header">
+                    <h2 class="e_modal__title">EDIT PASSWORD</h2>
+                    <a href="#" class="e_modal__close">&times;</a>
+                </header>
+                <div>
+                    <form>
+                        <h3 id="e_emp_id">Employee ID: </h3> <!-- EMPLOYEE ID FROM THE SELECTED RADIO WILL APPEAR HERE-->
+                    </form>
+                    <form>
+                        <input type="text" id="newPass" placeholder="New Password">
+                    </form>
+                </div>
+                <!-- CONFIRM BUTTON -->
+                <a href="#" class="b_confirm" id="edit_confirm">CONFIRM</a>
+            </section>
+        </div>
+    </div>
+     <!-- DELETE FUNCTION -->
+    <div class="d_modal" id="d_modal">
+        <div class="d_modal__dialog">
+            <section class="d_modal__content">
+                <header class="d_modal__header">
+                    <h2 class="d_modal__title">DELETE PROFILE</h2>
+                    <a href="#" class="d_modal__close">&times;</a>
+                </header>
+                <div>
+                    <form>
+                        <h3 id="d_emp_id">Employee ID: </h3> <!-- EMPLOYEE ID FROM THE SELECTED RADIO WILL APPEAR HERE-->
+                    </form>
+                    <form>
+                        <h4>Click confirm to delete this profile.</h4>
+                    </form>
+                </div>
+                <!-- CONFIRM BUTTON -->
+                <a href="#" class="b_confirm" id="delete_confirm">CONFIRM</a>
+            </section>
+        </div>
+    </div>
+    <!-- BACK TO HOMEPAGE BUTTON-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script> //Databae Delete checked rows
+function deleteRows(){
+                var checkedData =[]
+                var checkRows=document.querySelectorAll('#transac-table .select-radio:checked');
+                checkRows.forEach(function(radio){
+                var row = radio.closest('tr');                       //to get the checked row
+                var cells = row.querySelectorAll('td');
+                var confirm = document.getElementById("delete_confirm");
+                var emp_idElement = document.getElementById("d_emp_id");
+                checkedData.push(cells[1].textContent.trim());
+                emp_idElement.textContent = "Employee ID: " + cells[1].textContent.trim();
+   		        confirm.addEventListener("click",function(event){
+   		        console.log(checkedData)
+
+                $.ajax({
+                url: '/delete_data',
+                type: 'POST',
+                data:{
+                		checkedList:checkedData
+               		 },
+                success: function(response) {
+                        console.log("success delete");
+                        window.location.href='/employees';
+                }
+
+
+                });
+   		        })
+                 });
+
+            };
+
+
+function editPass(){
+        var checkRows=document.querySelectorAll('#transac-table .select-radio:checked');
+                checkRows.forEach(function(radio){
+                var row = radio.closest('tr');                       //to get the checked row
+                var cells = row.querySelectorAll('td');
+                var confirm = document.getElementById("edit_confirm");
+                var emp_idElement = document.getElementById("e_emp_id");
+                var checkedData = cells[1].textContent.trim();
+                emp_idElement.textContent = "Employee ID: " + checkedData;
+
+                confirm.addEventListener("click",function(event){
+   		        console.log(checkedData)
+                var newPass = document.getElementById("newPass").value;
+                console.log(newPass)
+                $.ajax({
+                url: '/edit_data',
+                type: 'POST',
+                data:{
+                		checkedData:checkedData,
+                		newPass:newPass
+               		 },
+                success: function(response) {
+
+                        console.log("success edit");
+                        window.location.href='/employees';
+
+                }
+
+
+                });
+   		        });
+
+           });
+        }
+
+
+function addEmp(){
+        var confirm = document.getElementById("add_confirm");
+        confirm.addEventListener("click",function(event){
+                var emp_id = document.getElementById("emp_id").value;
+                var emp_name = document.getElementById("emp_name").value;
+                var emp_pass = document.getElementById("emp_pass").value;
+                var emp_add = document.getElementById("emp_add").value;
+                var emp_contact = document.getElementById("emp_contact").value;
+                console.log("hello");
+                console.log(emp_id);
+                $.ajax({
+                url: '/add_data',
+                type: 'POST',
+                data:{
+                		id:emp_id,
+                		name:emp_name,
+                		pass:emp_pass,
+                		add:emp_add,
+                		contact:emp_contact
+               		 },
+                success: function(response) {
+
+                        console.log("success add");
+                        window.location.href='/employees';
+
+                }
+
+
+              });
+          });
+}
+
+    </script>
+    <a href="{{url_for('first')}}" class="back">RETURN<img src = "\static\arrow.png" style="width:20px;height:16px;margin:1px 1px -1px 10px;"></a>
+    </body>
+</html>
+		

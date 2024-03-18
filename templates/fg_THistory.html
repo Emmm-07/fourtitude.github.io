@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Fourtitude Garage</title>
+  		<link rel="stylesheet" href="\static\style6.css">
+	</head>
+    <body>
+
+    <h1>Transaction History</h1>
+     <!-- Date Filter -->
+    <div class="date-filter">
+        <label for="date-select"><h2>Filter by Date:</h2></label>
+        <input type="date" id="date-select">
+        <button onclick="filterTransactions()" class="f_button">Filter</button>
+    </div>
+    <!-- TRANSAC HITORY TABLE -->
+<!--    <div class="table-container">-->
+        <table id ="transac-table">
+            <thead>
+                <tr>
+<!--                    <th></th>-->
+                    <th>Transaction_ID</th>
+                    <th>Item_Code</th>
+                    <th>Customer_ID</th>
+                    <th>Transaction_Date</th>
+                    <th>Employee_Name</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for  i in transactions%}
+                <tr>
+<!--                    <td><input type="checkbox" class="select-checkbox" id="table"></td>-->
+                    <td>{{i.t_id}}</td>
+                    <td>{{i.i_code}}</td>
+                    <td>{{i.c_id}}</td>
+                    <td>{{i.t_date}}</td>
+                    <td>{{i.emp_name}}</td>
+                    <td>{{i.subtotal}}</td>
+                </tr>
+                {% endfor %}
+
+        </table>
+
+<!--        <div class="button-container">-->
+<!--            <button class="edit-button">Edit</button>-->
+<!--            <button class="delete-button">Delete</button>-->
+<!--        </div>-->
+<!--    </div>-->
+    <!-- BACK TO HOMEPAGE BUTTON-->
+    <a href="{{url_for('fg_home')}}" class="back">RETURN<img src = "/static/arrow.png" style="width:20px;height:16px;margin:1px 1px -1px 10px;"></a>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+     function filterTransactions(){
+        var date = document.getElementById('date-select').value;
+        console.log(date)
+
+         $.ajax({
+                url: '/filter_history',
+                type: 'POST',
+                data:{
+                		date:date
+               			},
+                success: function(response) {
+                    if(response.exist){
+                           window.location.href='/database';
+                    }else{
+                           var str = "No transaction occured on this date"
+                           alert(str);
+                    }
+
+                }
+            })
+            }
+
+
+    </script>
+    </body>
+</html>

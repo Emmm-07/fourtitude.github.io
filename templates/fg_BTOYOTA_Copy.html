@@ -1,0 +1,88 @@
+<html>
+	<head>
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Fourtitude Garage</title>
+  		<link rel="stylesheet" href="\static\style4_1.css">
+	</head>
+	<body>
+        <header>
+			<div class="logo">
+				<img src="\static\logo2_1.png" alt="Logo">
+			</div>
+			<!--NAVIGATION BUTTONS-->
+			<nav>
+				<ul>
+					<li><a class="select-button">BUY CAR</a></li>
+					<li><a href="FG-STRent.html">RENT CAR</a></li>
+					<li><a href="FG-STService.html">CAR SERVICES</a></li>
+				</ul>
+			</nav>
+		</header>
+        <!--BRAND LOGO-->
+        <div class="logo2">
+            <img src="\static\toyota2.png">
+        </div>
+        <!--LIST OF CARS-->
+       <div class="vinfo">		<!-- 	FROM HERE-->
+			<form  method="post" id="viosForm">
+				 <input type="text" name="v_id" value="BT-C001" style="display: none;">		<!--		BT-C001 = B Toyota -C001-->
+				 <button type="submit" id="submit_vios" style="display: none;"></button>
+			</form>
+		   <form  method="post" id="hiaceForm">
+				 <input type="text" name="v_id" value="BT-H001" style="display: none;">		<!--		BT-C001 = B Toyota -C001-->
+				 <button type="submit" id="submit_hiace" style="display: none;"></button>
+			</form>
+		   <form  method="post" id="hiluxForm">
+				 <input type="text" name="v_id" value="BT-G001" style="display: none;">		<!--		BT-C001 = B Toyota -C001-->
+				 <button type="submit" id="submit_hilux" style="display: none;"></button>
+			</form>
+		  		 <!-- 	TO HERE-->
+            <a href="#" class="b-button" onclick="submitV()">
+                <img src="\static\toyota_info1.png">
+            </a>
+            <a href="#" class="b-button" onclick="submitHc()">
+                <img src="\static\toyota_info2.png">
+            </a>
+            <a href="#" class="b-button" onclick="submitHx()">
+                <img src="\static\toyota_info3.png">
+            </a>
+        </div>
+
+        <!--END-->
+		<div class="white-panel">
+			<div class="panel-header">
+				<div class="cart">
+					<img src="\static\cart.png" style="width:250px;height:65px;">
+				</div>
+
+			</div>
+<div id="result-container">
+    <!-- Result will be displayed here -->
+	<!-- Result will be displayed here -->
+	<!-- Result will be displayed here -->
+</div>
+			<hr class="line">
+			<div class="payment-info">
+				<div class="payment-item">
+					<p>TOTAL:{{total}}			</p>
+				</div>
+				<div class="payment-item">
+					<p>AMOUNT PAID: <input type="text" id="amt_paid" placeholder={{placeholder}}></p>
+				</div>
+				<div class="payment-item">
+					<p>CHANGE:{{change}} 		</p>
+				</div>
+				<button>CHECKOUT</button>
+			</div>
+		</div>
+<!--			NEED JAVASCRIPT-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+		<script src="/static/index.js"> </script>
+
+
+
+
+
+
+	</body>
+</html>

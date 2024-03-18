@@ -1,0 +1,176 @@
+<html>
+	<head>
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Fourtitude Garage</title>
+  		<link rel="stylesheet" href="\static\style4.css">
+	</head>
+	<body>
+        <header>
+			<div class="logo">
+				<img src="\static\logo2_1.png" alt="Logo">
+			</div>
+			<!--NAVIGATION BUTTONS-->
+			<nav>
+				<ul>
+					<li><a href="{{url_for('buy')}}" >BUY CAR</a></li>
+					<li><a class="select-button">RENT CAR</a></li>
+					<li><a href="{{url_for('services')}}">CAR SERVICES</a></li>
+				</ul>
+			</nav>
+		</header>
+        <h1>BRANDS</h1>
+        <div class="brands">
+            <a href="{{url_for('toyota_rent')}}" class="b-button">
+                <img src="\static\toyota1.png">
+            </a>
+            <a href="{{url_for('honda_rent')}}" class="b-button">
+                <img src="\static\honda1.png">
+            </a>
+            <a href="{{url_for('ford_rent')}}" class="b-button">
+                <img src="\static\ford1.png">
+            </a>
+        </div>
+		<div class="white-panel">
+			<div class="panel-header">
+				<div class="cart">
+					<img src="\static\cart.png" style="width:250px;height:65px;">
+				</div>
+			</div>
+<div id="result-container">
+	{{transcript | safe}}			<!-- safe: To render html code written in python -->
+    <!-- Result will be displayed here -->
+	<!-- Result will be displayed here -->
+	<!-- Result will be displayed here -->
+</div>
+			<div>
+				<a href="#" class="c-button" id="clear_cart">CLEAR CART</a>
+			</div>
+			<hr class="line">
+			<div class="payment-info" >
+				<div class="payment-item" id="total">
+					<p>TOTAL:	{{total}}		</p>
+				</div>
+				<div class="payment-item" id="amt_P">
+					<p>AMOUNT PAID: <input type="text" id="amt_paid" placeholder={{placeholder}}></p>
+				</div>
+				<div class="payment-item" id="change">
+					<p>CHANGE: {{change}}		</p>
+				</div>
+<!--				<button id="checkout">CHECKOUT</button>-->
+					<a href="#c_modal" class="c_button" id="checkout">CHECKOUT</a>
+				<div class="c_modal" id="c_modal">
+					<div class="c_modal__dialog">
+					  <section class="c_modal__content">
+							<div>
+								<a href="#" class="c_modal__close">&times;</a>
+									<img src="/static/o_receipt.png" id="receipt_img" style="height:40rem;">
+							</div>
+							<footer class="c_modal__footer">
+							  <!-- DONE BUTTON (Goes back to Customer Profile) -->
+							  <button onclick="goToHome()">CONFIRM</button>
+							</footer>
+					  </section>
+					</div>
+					</div>
+			</div>
+		</div>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+			<script>
+					function goToHome(){
+    		window.location.href="/home";
+		}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+//Clear Cart
+var clear = document.getElementById("clear_cart");
+   		clear.addEventListener("click",function(event){
+   			var origin = window.location.href
+   			console.log(origin)
+            $.ajax({
+                url: '/clear',
+                type: 'POST',
+                data:{
+                		origin:origin,
+               			no_data:"no_data"
+               			},
+                success: function(response) {
+                    // Append the response to the result container
+                   // window.location.href = origin;
+                   $('#result-container').html("<p> </p>");
+                   $('#total').html("<p>TOTAL: 		</p>");
+                    document.getElementById("amt_paid").placeholder = " ";
+                    console.log("Successfully cleared transaction")
+                }
+
+            })
+   	})
+
+		//CHECKOUT----------------------------------------------------------------------------------------------------------------------------------------------------
+var checkout = document.getElementById("checkout");
+   		checkout.addEventListener("click",function(event){
+        var img = document.getElementById("receipt_img");
+            $.ajax({
+                url: '/checkout',
+                type: 'POST',
+                data:{
+                		origin:origin,
+               			no_data:"no_data"
+               			},
+                success: function(response) {
+                img.src="/static/"+response.img_file;
+                console.log(response.img_file);
+                     $('#result-container').html("<p> </p>");
+                   $('#total').html("<p>TOTAL: 		</p>");
+                   $('#change').html("<p>CHANGE:  </p>");
+                   $('#amt_P').html("<p>AMOUNT PAID: <input type=\"text\" id=\"amt_paid\" placeholder={{placeholder}}></p>");
+                    document.getElementById("amt_paid").placeholder = " ";
+                    console.log("Successfully Checked out transaction")
+                    console.log("Successful Checkout")
+                }
+
+            })
+   	})
+
+    //Get input price if ENTER is clicked ---------------------------------------------------------------------------------------
+    var amtElement = document.getElementById("amt_paid");
+    amtElement.addEventListener("keydown", function (e) {
+    if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
+        validate(e);
+        }
+        });
+
+    function validate(e) {
+                    //var text = e.target.value;
+        amt_value = amtElement.value;
+        console.log(amt_value)
+                        //alert("some error occured in session agent")	       //to popup alert
+                        //window.location.href = '/menu';						//to navigate to other page/python
+
+        const s = JSON.stringify(amt_value)
+        console.log("DONEEEE: ")
+        console.log(s)
+        $.ajax({												//Send data to python
+        url:"/test",
+        type:"POST",
+        contentType:"application/json",
+        data: s,
+        success: function(response){
+            //window.location.href=response.redirect_url;
+            if(response.change!=" "){
+                $('#change').html("<p>CHANGE: Php "+response.change +"</p>");
+            }else{
+                $('#change').html("Insufficient amount ");
+            }
+            $('#total').html("<p>TOTAL: "+response.total +"</p>");
+             document.getElementById("amt_paid").placeholder = "Enter Amount";
+            console.log("Successfullll");
+
+        }
+        });
+                    //console.log("DONEEEE")
+                    //window.location.href = '/toyota';
+    }
+			</script>
+
+	</body>
+</html>
