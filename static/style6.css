@@ -35,6 +35,16 @@ h1 {
     width: 100%;
   }
 
+  h3 {
+    color: #1b1b1b;
+    background-color: #fff;
+    font-size: 16px;
+    text-align: left;
+    flex-grow: 1;
+    width: 100%;
+    padding: 8px;
+    border-radius: 10px;
+  }
 
 /* Date Filter */
 .date-filter {
@@ -99,4 +109,13 @@ th {
 
   .back:hover{
     background: #802b2b;
+  }
+
+  /* Total Sales */
+  .t_sales {
+    display: flex;
+    margin-top: 15px;
+    margin-right: 10%;
+    width: 100%;
+    max-width: 250px;
   }

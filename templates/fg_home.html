@@ -23,8 +23,11 @@
 				<br>
 			<a href="#modal" class="modal-trigger"  >SUBMIT</a>
 		  </div>
-		<!-- TRANSACTION HISTORY BUTTON-->
-		<a href="{{url_for('database')}}" class="transac_h"><img src = "\static\history.png" style="height:30px;margin:1px 1px 1px 1px;"></a>
+		<!-- TRANSACTION HISTORY AND LOGOUT BUTTON-->
+		<div>
+			<a href="{{url_for('database')}}" class="transac_h"><img src = "\static\history.png" style="height:30px;margin:1px 1px 1px 1px;"></a>
+			<a href="{{url_for('first')}}" class="b_logout">LOGOUT</a>
+		</div>
 
 		<div class="modal" id="modal">
   			<div class="modal__dialog">

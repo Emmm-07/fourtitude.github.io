@@ -5,10 +5,10 @@ import pyodbc
 from jinja2 import Template
 from waitress import serve
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtCore import  QUrl
-from threading import Thread
+# from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
+# from PyQt5.QtWebEngineWidgets import QWebEngineView
+# from PyQt5.QtCore import  QUrl
+# from threading import Thread
 from werkzeug.formparser import parse_form_data
 from datetime import date
 from fpdf import FPDF
@@ -45,7 +45,7 @@ class Variables:
         self.customer_address = "//"
 
         self.filter_date = ""
-
+        self.exists = False
     def get_total(self):
         return self.total
 
@@ -283,7 +283,7 @@ def checkout():
 
     print(transaction_list)
     for list in transaction_list:
-        dBase_cursor.execute(f"INSERT INTO transaction (Transaction_ID,Item_Code, Customer_ID, Transaction_Date, Employee_Name,Subtotal) VALUES ('{t_id}','{list[0]}', '{list[1]}', '{list[2]}', '{list[3]}',{list[4]})")
+        dBase_cursor.execute(f"INSERT INTO transaction (Transaction_ID,Item_Code, Customer_Name, Transaction_Date, Employee_Name,Subtotal) VALUES ('{t_id}','{list[0]}', '{list[1]}', '{list[2]}', '{list[3]}',{list[4]})")
         connection.commit()
         print(list)
     # var.transactions=transaction_list.copy()
@@ -293,20 +293,24 @@ def checkout():
     services_qty_Dict.clear()
     return jsonify({'None':"none",'img_file':img_name})
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------
 @app.route('/database')                                 # Transaction history
 def database():
-    if var.filter_date == "//":
-        print("yes")
+    daily_sales=0
+    if not var.exists:
         dBase_cursor.execute(f"select * from transaction ORDER BY Transaction_ID DESC")
         all_transac = dBase_cursor.fetchall()
     else:
-        print("no")
         dBase_cursor.execute(f"select * from transaction where Transaction_Date='{var.filter_date}' ORDER BY Transaction_ID DESC")
         all_transac = dBase_cursor.fetchall()
+        var.exists=False
+    for sub in all_transac:
+        daily_sales += int(sub[5])                  #get the add all subtotals
 
+    daily_sales = f"Php {daily_sales:,}"
     transac_dict = [{'t_id':t_id,'i_code':i_code,'c_id':c_id,'t_date':t_date,'emp_name':emp_name,'subtotal':f"Php {int(subtotal):,}"}for(t_id,i_code,c_id,t_date,emp_name,subtotal)in all_transac]
-    var.filter_date="//"
-    return render_template('fg_THistory.html',transactions=transac_dict)
+
+    return render_template('fg_THistory.html',transactions=transac_dict,daily_sales=daily_sales)
 
 @app.route('/filter_history',methods=['POST'])
 def filter_history():
@@ -316,9 +320,12 @@ def filter_history():
         print(date)
         dBase_cursor.execute(f"select * from transaction where Transaction_Date='{var.filter_date}' ORDER BY Transaction_ID DESC")
         all_transac = dBase_cursor.fetchall()
+
         if all_transac:
+            var.exists = True
             return jsonify({'exist': True})
         else:
+            var.exists = False
             return jsonify({'exist': False})
 
 
@@ -400,40 +407,40 @@ def index():
 def start_flask_app():
     app.run()
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Fourtitude Garage")
-        self.setGeometry(100, 100, 800, 600)
-
-        self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
-
-        layout = QVBoxLayout()
-        self.central_widget.setLayout(layout)
-
-        self.web_view = QWebEngineView()
-        layout.addWidget(self.web_view)
-
-        self.load_flask_app()
-
-    def load_flask_app(self):
-        url = QUrl("http://127.0.0.1:5000/")  # Create a QUrl object
-        self.web_view.setUrl(url)
-
-
-def main():
-    # Start Flask app in a separate thread
-    from threading import Thread
-    flask_thread = Thread(target=start_flask_app)
-    flask_thread.start()
-
-    # Create PyQt application
-    app = QApplication(sys.argv)
-    main_window = MainWindow()
-    main_window.show()
-    sys.exit(app.exec_())
-################################################################################################
+# class MainWindow(QMainWindow):
+#     def __init__(self):
+#         super().__init__()
+#         self.setWindowTitle("Fourtitude Garage")
+#         self.setGeometry(100, 100, 800, 600)
+#
+#         self.central_widget = QWidget()
+#         self.setCentralWidget(self.central_widget)
+#
+#         layout = QVBoxLayout()
+#         self.central_widget.setLayout(layout)
+#
+#         self.web_view = QWebEngineView()
+#         layout.addWidget(self.web_view)
+#
+#         self.load_flask_app()
+#
+#     def load_flask_app(self):
+#         url = QUrl("http://127.0.0.1:5000/")  # Create a QUrl object
+#         self.web_view.setUrl(url)
+#
+#
+# def main():
+#     # Start Flask app in a separate thread
+#     from threading import Thread
+#     flask_thread = Thread(target=start_flask_app)
+#     flask_thread.start()
+#
+#     # Create PyQt application
+#     app = QApplication(sys.argv)
+#     main_window = MainWindow()
+#     main_window.show()
+#     sys.exit(app.exec_())
+# ################################################################################################
 
 
 @app.route('/customer_info', methods=['POST'])
@@ -447,7 +454,7 @@ def customer_info():
     dBase_cursor.execute(f"SELECT COUNT(*) FROM customer_profile")                                                    # To know the number of rows
     row_count = dBase_cursor.fetchone()[0]                                                                         #
 
-    var.customer_id=f"CID{row_count}"
+    var.customer_id=name                #should be name not ID
     dBase_cursor.execute(f"INSERT INTO customer_profile (Customer_ID, Name, Address, Contact) VALUES ('CID{row_count}', '{name}', '{address}', '{contact}')")
     connection.commit()
 
@@ -669,6 +676,6 @@ def transaction():
 # ---------------------------------------------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    serve(app,host='0.0.0.0',port=50100,threads=2)
+    app.run(debug=True)
+    #serve(app,host='0.0.0.0',port=50100,threads=2)
     #main()

@@ -21,7 +21,7 @@
 <!--                    <th></th>-->
                     <th>Transaction_ID</th>
                     <th>Item_Code</th>
-                    <th>Customer_ID</th>
+                    <th>Customer_Name</th>
                     <th>Transaction_Date</th>
                     <th>Employee_Name</th>
                     <th>Subtotal</th>
@@ -41,7 +41,13 @@
                 {% endfor %}
 
         </table>
-
+     <!-- TOTAL SALES -->
+    <div class="t_sales">
+        <h3 >Total Sales: {{daily_sales}}</h3>
+    </div>
+    <br>
+    <br>
+    <br><br><br><br><br><br><br><br>
 <!--        <div class="button-container">-->
 <!--            <button class="edit-button">Edit</button>-->
 <!--            <button class="delete-button">Delete</button>-->
